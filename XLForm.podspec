@@ -9,9 +9,19 @@ Pod::Spec.new do |s|
   s.homepage = 'https://github.com/xmartlabs/XLForm'
   s.authors  = { 'Martin Barreto' => 'martin@xmartlabs.com' }
   s.source   = { :git => 'https://github.com/xmartlabs/XLForm.git', :tag => s.version }
-  s.source_files = 'XLForm/XL/**/*.{h,m}'
   s.requires_arc = true
   s.ios.deployment_target = '7.0'
   s.ios.frameworks = 'UIKit', 'Foundation', 'CoreGraphics'
   s.resource = 'XLForm/XLForm.bundle'
+
+  s.default_subspec = 'Core'
+
+  s.subspec 'Core' do |core|
+    core.source_files = 'XLForm/XL/**/*.{h,m}'
+  end
+
+  s.subspec 'AppExtension' do |ext|
+    ext.source_files = 'XLForm/XL/**/*.{h,m}'
+    ext.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'XL_APP_EXTENSIONS=1' }
+  end
 end
