@@ -12,16 +12,17 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.ios.deployment_target = '7.0'
   s.ios.frameworks = 'UIKit', 'Foundation', 'CoreGraphics'
-  s.resource = 'XLForm/XLForm.bundle'
 
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |core|
     core.source_files = 'XLForm/XL/**/*.{h,m}'
+    core.resource = 'XLForm/XLForm.bundle'
   end
 
   s.subspec 'AppExtension' do |ext|
     ext.source_files = 'XLForm/XL/**/*.{h,m}'
+    ext.resource = 'XLForm/XLForm.bundle'
     ext.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'XL_APP_EXTENSIONS=1' }
   end
 end
