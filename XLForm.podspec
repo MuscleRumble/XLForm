@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'XLForm'
-  s.version  = '3.3.0'
+  s.version  = '4.0.1'
   s.license  = { :type => 'MIT' }
   s.summary  = 'XLForm is the most flexible and powerful iOS library to create dynamic table-view forms.'
   s.description = <<-DESC
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.authors  = { 'Martin Barreto' => 'martin@xmartlabs.com' }
   s.source   = { :git => 'https://github.com/xmartlabs/XLForm.git', :tag => s.version }
   s.requires_arc = true
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '9.0'
   s.ios.frameworks = 'UIKit', 'Foundation', 'CoreGraphics'
 
   s.default_subspec = 'Core'

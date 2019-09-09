@@ -34,8 +34,8 @@
 
 @interface XLFormOptionsViewController () <UITableViewDataSource>
 
-@property NSString * titleHeaderSection;
-@property NSString * titleFooterSection;
+@property (nonatomic, copy) NSString * titleHeaderSection;
+@property (nonatomic, copy) NSString * titleFooterSection;
 
 
 @end
@@ -45,7 +45,6 @@
 @synthesize titleHeaderSection = _titleHeaderSection;
 @synthesize titleFooterSection = _titleFooterSection;
 @synthesize rowDescriptor = _rowDescriptor;
-@synthesize popoverController = __popoverController;
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
 {
@@ -153,9 +152,8 @@
             self.rowDescriptor.value = cellObject;
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
-        if (self.popoverController){
-            [self.popoverController dismissPopoverAnimated:YES];
-            [self.popoverController.delegate popoverControllerDidDismissPopover:self.popoverController];
+        if (self.modalPresentationStyle == UIModalPresentationPopover){
+            [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
         }
         else if ([self.parentViewController isKindOfClass:[UINavigationController class]]){
             [self.navigationController popViewControllerAnimated:YES];

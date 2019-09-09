@@ -29,7 +29,6 @@
 
 @interface XLFormImageCell() <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
-    UIPopoverController *popoverController;
     UIImagePickerController *imagePickerController;
     UIAlertController *alertController;
 }
@@ -72,6 +71,7 @@
 
 - (void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller
 {
+    __weak typeof(self) weak = self;
     alertController = [UIAlertController alertControllerWithTitle: self.rowDescriptor.title
                                                           message: nil
                                                    preferredStyle: UIAlertControllerStyleActionSheet];
@@ -79,14 +79,14 @@
     [alertController addAction:[UIAlertAction actionWithTitle: NSLocalizedString(@"Choose From Library", nil)
                                                         style: UIAlertActionStyleDefault
                                                       handler: ^(UIAlertAction * _Nonnull action) {
-                                                          [self openImage:UIImagePickerControllerSourceTypePhotoLibrary];
+                                                          [weak openImage:UIImagePickerControllerSourceTypePhotoLibrary];
                                                       }]];
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         [alertController addAction:[UIAlertAction actionWithTitle: NSLocalizedString(@"Take Photo", nil)
                                                             style: UIAlertActionStyleDefault
                                                           handler: ^(UIAlertAction * _Nonnull action) {
-                                                              [self openImage:UIImagePickerControllerSourceTypeCamera];
+                                                              [weak openImage:UIImagePickerControllerSourceTypeCamera];
                                                           }]];
     }
     
@@ -101,7 +101,7 @@
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.formViewController presentViewController:alertController animated: true completion: nil];
+        [weak.formViewController presentViewController:self->alertController animated: true completion: nil];
     });
 }
 
@@ -113,16 +113,15 @@
     imagePickerController.sourceType = source;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        popoverController = [[UIPopoverController alloc] initWithContentViewController:imagePickerController];
-        [popoverController presentPopoverFromRect: self.contentView.frame
-                                           inView: self.formViewController.view
-                         permittedArrowDirections: UIPopoverArrowDirectionAny
-                                         animated: YES];
-    } else {
-        [self.formViewController presentViewController: imagePickerController
-                                              animated: YES
-                                            completion: nil];
+        imagePickerController.modalPresentationStyle = UIModalPresentationPopover;
+        imagePickerController.popoverPresentationController.sourceRect = self.contentView.frame;
+        imagePickerController.popoverPresentationController.sourceView = self.formViewController.view;
+        imagePickerController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
     }
+    
+    [self.formViewController presentViewController: imagePickerController
+                                          animated: YES
+                                        completion: nil];
 }
 
 #pragma mark -  UIImagePickerControllerDelegate
@@ -138,8 +137,8 @@
     }
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        if (popoverController && popoverController.isPopoverVisible) {
-            [popoverController dismissPopoverAnimated: YES];
+        if (self.formViewController.presentedViewController && self.formViewController.presentedViewController.modalPresentationStyle == UIModalPresentationPopover) {
+            [self.formViewController dismissViewControllerAnimated:YES completion:nil];
         }
     } else {
         [self.formViewController dismissViewControllerAnimated: YES completion: nil];

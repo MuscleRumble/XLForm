@@ -57,7 +57,7 @@ class InlineSegmentedCell : XLFormBaseCell {
     
     override func formDescriptorCellBecomeFirstResponder() -> Bool {
         if isFirstResponder {
-            resignFirstResponder()
+            _ = resignFirstResponder()
             return false
         }
         return becomeFirstResponder()
@@ -108,7 +108,7 @@ class InlineSegmentedControl : XLFormBaseCell, XLFormInlineRowDescriptorCell {
     
     //MARK: Actions
     
-    func valueChanged() {
+    @objc func valueChanged() {
         inlineRowDescriptor!.value = inlineRowDescriptor!.selectorOptions![segmentedControl.selectedSegmentIndex]
         formViewController().updateFormRow(inlineRowDescriptor)
     }
